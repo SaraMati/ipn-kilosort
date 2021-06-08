@@ -32,13 +32,13 @@ Nchan = rez.ops.Nchan;
 nSamples = 32;%rez.ops.nt0;
 
 %templates = gpuArray(zeros(Nchan, size(rez.W,1), rez.ops.Nfilt, 'single'));
-templates = gpuArray(zeros(Nchan, size(rez.W,1), size(rez.U,2), 'single'));
+%templates = gpuArray(zeros(Nchan, size(rez.W,1), size(rez.U,2), 'single'));
+templates = zeros(Nchan, size(rez.W,1), size(rez.U,2), 'single');
 for iNN = 1:size(rez.U,2)%rez.ops.Nfilt %
-
     templates(:,:,iNN) = squeeze(rez.U(:,iNN,:)) * squeeze(rez.W(:,iNN,:))';
 end
 
-templates = gather(templates);
+%templates = gather(templates);
 
 amplitude_max_channel = [];
 for i = 1:size(templates,3)
@@ -219,7 +219,7 @@ function waveforms_all = Kilosort_ExtractWaveforms(rez)
         ia = rez.ia;
         spikeTimes = rez.st3(:,1);
 
-        ops.ForceMaxRAMforDat   = 10000000000;
+        ops.ForceMaxRAMforDat   = 10000000;
 
         if ispc
             dmem         = memory;
@@ -235,7 +235,7 @@ function waveforms_all = Kilosort_ExtractWaveforms(rez)
         
         %HEre, a lot of space should have been cleared from memory. It's OK
         %to make the batch bigger than in KiloSort.
-        NT          = 2^14*32+ ops.ntbuff;
+        NT          = 2^6*32+ ops.ntbuff;
         NTbuff      = NT + 4*ops.ntbuff;
         Nbatch      = ceil(d.bytes/2/NchanTOT /(NT-ops.ntbuff));
         Nbatch_buff = floor(4/5 * nint16s/ops.Nchan /(NT-ops.ntbuff)); % factor of 4/5 for storing PCs of spikes
