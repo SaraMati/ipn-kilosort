@@ -95,6 +95,8 @@ if ~isempty(savePath)
 %     writeNPY(Fs, fullfile(savePath, 'Fs.npy'));
     writeNPY([xcoords(conn) ycoords(conn)], fullfile(savePath, 'channel_positions.npy'));
     
+    writeNPY(rez.ops.kcoords, fullfile(savePath, 'channel_shanks.npy'));
+    
     writeNPY(templateFeatures, fullfile(savePath, 'template_features.npy'));
     writeNPY(templateFeatureInds'-1, fullfile(savePath, 'template_feature_ind.npy'));% -1 for zero indexing
     writeNPY(pcFeatures, fullfile(savePath, 'pc_features.npy'));
